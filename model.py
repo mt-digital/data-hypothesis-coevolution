@@ -42,7 +42,7 @@ def coevolution_simulation(d_init, h_init, W, conv_limit=1e-4, max_its=1e4):
 
     diff = 1.0
     its = 0
-    while diff > conv_limit and its < max_its:
+    while diff > conv_limit or its > max_its:
 
         d_next, h_next = iterate_dh(d, h, W)
 
@@ -61,6 +61,10 @@ def coevolution_simulation(d_init, h_init, W, conv_limit=1e-4, max_its=1e4):
 
     n = its + 1
     K = len(d)
+
+    if its > max_its:
+        print('Warning: max its exceeded for K=', str(K))
+        return None
 
     return (d_hist.reshape(n, K), h_hist.reshape(n, K))
 

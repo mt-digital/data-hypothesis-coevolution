@@ -1,0 +1,300 @@
+% !TEX TS-program = xelatex
+% !TEX encoding = UTF-8 Unicode
+\documentclass[11pt]{amsart}
+\usepackage{fullpage}
+\usepackage{setspace}
+
+\usepackage[foot]{amsaddr}
+\usepackage{graphicx}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage[]{geometry}
+%\usepackage{mathtools}
+% \usepackage{subfigure}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{lineno}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{natbib} %this allows for styles in referencing
+%\bibpunct[, ]{(}{)}{,}{a}{}{,}
+\DeclareMathOperator{\var}{var}
+\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\E}{E}
+
+\synctex=1
+
+\newcommand*\patchAmsMathEnvironmentForLineno[1]{%
+  \expandafter\let\csname old#1\expandafter\endcsname\csname #1\endcsname
+  \expandafter\let\csname oldend#1\expandafter\endcsname\csname end#1\endcsname
+  \renewenvironment{#1}%
+     {\linenomath\csname old#1\endcsname}%
+     {\csname oldend#1\endcsname\endlinenomath}}%
+\newcommand*\patchBothAmsMathEnvironmentsForLineno[1]{%
+  \patchAmsMathEnvironmentForLineno{#1}%
+  \patchAmsMathEnvironmentForLineno{#1*}}%
+\AtBeginDocument{%
+\patchBothAmsMathEnvironmentsForLineno{equation}%
+\patchBothAmsMathEnvironmentsForLineno{align}%
+\patchBothAmsMathEnvironmentsForLineno{flalign}%
+\patchBothAmsMathEnvironmentsForLineno{alignat}%
+\patchBothAmsMathEnvironmentsForLineno{gather}%
+\patchBothAmsMathEnvironmentsForLineno{multline}%
+}
+
+\usepackage{float}
+%\usepackage{lmodern}
+%\usepackage{unicode-math}
+\usepackage{mathspec}
+\usepackage{xltxtra}
+\usepackage{xunicode}
+\defaultfontfeatures{Mapping=tex-text}
+%\setsansfont[Scale=MatchLowercase,Mapping=tex-text]{Helvetica}
+%\setmonofont[Scale=0.85]{Bitstream Vera Sans Mono}
+%\setmainfont[Scale=1,Ligatures={Common}]{Minion Pro}
+%\setromanfont[Scale=1,Ligatures={Common}]{Minion Pro}
+%\setmathrm[Scale=1]{Minion Pro}
+%\setmathfont(Digits,Latin)[Numbers={Lining,Proportional}]{Minion Pro}
+
+\definecolor{linenocolor}{gray}{0.6}
+\renewcommand\thelinenumber{\color{linenocolor}\arabic{linenumber}}
+
+\usepackage{fix-cm}
+
+\usepackage{tikz}
+\tikzset{every state/.style={minimum size=.5in}}
+\usetikzlibrary{arrows}
+\usetikzlibrary{positioning,calc}
+
+\usetikzlibrary{er}
+\usetikzlibrary{shapes,snakes}
+\usetikzlibrary{automata}
+
+\setlength{\footskip}{70pt} %set page number lower down on the page
+
+
+%\usepackage{hanging}
+
+\setcounter{totalnumber}{1}
+
+\newcommand{\mr}{\mathrm}
+\newcommand{\tsc}[1]{\text{\textsc{#1}}}
+\calclayout %centers text on page.
+\begin{document}
+
+
+\title{}
+\author[Turner]{Matthew A.~Turner}
+
+%Author order subject to change
+\address{$^1$Cognitive and Information Sciences, University of California, Merced, Merced, CA, USA}
+\email{maturner01@gmail.com}
+
+\date{\today}
+
+\maketitle
+
+% \tableofcontents
+
+{\vspace{-6pt}\footnotesize\begin{center}\today\end{center}\vspace{12pt}}
+
+\linenumbers
+\modulolinenumbers[3]
+
+
+\begin{abstract}
+\noindent \small
+  What factors contribute to the rate of population-level innovation? Why do
+  some cultures seem to innovate faster than others? Is it driven by selection,
+  or are there information-theoretic reasons related to the nature of 
+  replicating agents? I explore this question here where I propose a model
+  of innovation as it depends on the likelihood landscape of cultural models
+  on the observation of cultural communication, which could also be called
+  cultural artifacts, interpreted loosely as stuff people (or agents more generally)
+  said. 
+\end{abstract}
+
+\doublespacing
+
+\vspace{12pt}
+
+\noindent \textbf{Keywords:} population dynamics, information theory, 
+bayesian learning, culture, innovation, complexity
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  	Introduction
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+
+WEIRD culture may not be universal, but it seems to be exploding in complexity.
+More complexity seems to breed more innovation, since greater recombination
+is possible. Take modern electric cars, for example. They are built of many
+earlier innovations, such as innovations in body and frame materials, battery
+innovation, and aerodynamic innovation---each of these innovations were in turn
+based on past innovations. While this seems qualitatively or anecdotally true,
+in order to pursue the subject scientifically, we must have quantitative 
+theories and models of the relationship between innovation and cultural complexity.
+In this paper I suggest a dynamical evolutionary
+model used in computational experiments that will illuminate the relationship
+between cultural complexity and innovation. The model is an implementation of
+the coevolution model of \cite{Ferdinand2018} where both the rates of public 
+productions of cultural variants and private mental models---``hypotheses'' about
+how culture is---co-evolve guided by the ``fitness'' of public productions
+given the rate of private cultural models. 
+
+In this model, learners are conceptualized as identical bayesian learners.
+Bayesian learning has found application in models of language learning in
+the form of iterated learning models. Kalish and Griffiths showed that iterated
+learning of cultural artifacts or cultural models correspond to the information
+process of maximum a posteriori (MAP) sampling and expectation maximization
+sampling. Ferdinand (2018) demonstrated the usefulness of a model
+of the coevolution of data and hypotheses. Evolutionary models of data, i.e.
+cultural ``artifacts'' or ``variants,'' often take the form of the replicator
+equation; the fitness of each variant can be interpreted as the net benefit
+of producing that cultural variant given the distribution of hypotheses, or
+possible cultural models, in the population. But the proportion of agents using
+each cultural model also evolves. The evolution of cultural models is the
+subject of iterated learning models (ILM). 
+
+
+\subsection{Model}
+
+\cite{Ferdinand2018} uses these two formulations to derive two recurrence equations for the 
+coevolution of variants and models:
+
+\begin{subequations}
+  \begin{equation}
+    p(d_i)' = \sum_j \frac{p(h_j)p(d_i|h_j)}{\sum_{k=1}^K p(d_k)p(d_k|h_j)} p(d_i) \\
+  \end{equation}
+  \begin{equation}
+    p(h_j)' = \sum_i \frac{p(d_i)p(d_i|h_j)}{\sum_{k=1}^K p(h_k)p(d_i|h_k)} p(h_j).
+  \end{equation}
+\end{subequations}
+\noindent
+
+We can write these in matrix-vector form as 
+
+\begin{subequations}
+  \begin{equation}
+    p(d)' = \left(D^{} p(h)\right) \odot p(d)
+  \end{equation}
+  \begin{equation}
+    p(h)' = \left(H^T p(d)\right) \odot p(h),
+  \end{equation}
+\end{subequations}
+\noindent
+
+where $\odot$ represents element-wise multiplication.
+
+$D$ is the data transition matrix and $H^T$ is the hypotheses transition matrix.
+These rely on the ``fitness'' matrix of likelihoods, $W_{ij} = p(d_i|h_j)$ and
+the global fitness of hypothesis $h_j$, $Z_{d,j} = \sum_k p(d_k)p(d_k|h_j)$,
+and the global fitness of artifact $d_i$, $Z_{i,h} = \sum_k p(h_k)p(d_i|h_k)$:
+
+\[
+  D = \begin{pmatrix} W_{i=1}/Z_{d,1}~|~W_{i=2}/Z_{d,2}~|~\cdots~|~W_{i=K}/Z_{d,K} \end{pmatrix}
+\]
+
+\[
+  H = \begin{pmatrix} W_{j=1}/Z_{1,h} \\
+                      W_{j=2}/Z_{2,h} \\
+                       \vdots         \\ 
+                      W_{j=K}/Z_{K,h} \end{pmatrix}
+\]
+
+where $W_i$ are the columns and $W_j$ are the rows of $W$. Each element of 
+either column $i$ or row $j$ is divided by the divisor $Z_x$ above.
+In this report, $W$ is constant throughout the simulation, but $Z_d$ and $Z_h$
+are clearly not, since $p(d)$ and $p(h)$ evolve.
+
+\subsection{Outcome Measures}
+
+Recall the goal here is to understand the relationship between innovation rate in
+a culture and the cultural complexity of that culture. There are two ways
+I propose to mesure innovation rate. The first is indirect, and may not even
+measure ``innovation'' per se, but I think it belongs: that is to calculate the
+time required to converge to a solution as a function of cultural complexity, 
+which I denote $T(K)$. Since iterated learning can be thought of as an expectation
+maximization algorithm, this time to converge represents the computational 
+complexity for a given a cultural complexity 
+\citep{Griffiths2007a,Kalish2007}. We can also investigate the relationship
+between the innovation rate at time $t$, which for probability distributions can be
+measured with the Kullback-Liebler divergence from one timestep to another, 
+
+\begin{equation}
+  I_x(t) = KL(p^{(t+1)}(x)~||~p^{(t)}(x))
+\end{equation}
+
+where $x \in \{d, h\}$. See \cite{Griffiths2013} for a similar approach that also
+provides experimental evidence of information rate as a function of cultural
+parameters.
+
+\subsection{Experiments}
+
+I ran N experimental trials for each value of $K$ tested. From this we can 
+count the average number of timesteps required for convergence for each $K$,
+and create a timeseries of innovation for each $K$. 
+
+
+\section{Results}
+
+
+\begin{figure}[H]
+  \caption{Time to converge as a function of cultural complexity. As culture
+  becomes more complex, the ``computation'' social interaction implements 
+  takes longer and longer to converge, following a quadratic relationship,
+  meaning the cultural computation is $O(K^2)$.}
+  \centering
+    \includegraphics[width=0.8\textwidth]{Figures/AveT_v_K.pdf}
+  \label{fig:}
+\end{figure}
+
+% \begin{figure}[H]
+%   \caption{Innovation rate over time for different cultural complexities.}
+%   \centering
+%     % \includegraphics[]{Figures/}
+%   \label{fig:}
+% \end{figure}
+
+
+
+\section{Discussion}
+
+The model presented here makes many implicit assumptions that are worth 
+explaining in detail because they present opportunities for future extensions
+that will help us further understand cultural dynamics. First, the model assumes
+that agents interact with equal probability, and that there are many agents.
+Second, there is perfect communication in this model. 
+Third, an interpretive assumption is that these cultural data and hypotheses
+have some concrete interpretation. This is not so clear and deserves careful
+thought. To address the first issue of structured interactions, we could imagine
+connecting bayesian learners on different networks to observe network effects on
+convergence and innovation rates. To address the second issue, we could imagine
+adding communication noise to inter-agent communication, so that agents update
+their hypotheses based on imperfect observations. 
+
+The third issue I believe will depend on the application. I think this framework
+can be used to impute the ``cultural complexity'' of different fields of study
+as revealed by global innovation rates in successful grant applications. 
+In that application, we don't really care what the hypotheses are. However, 
+the fact that hypotheses are present, though latent, and evolving may be
+crucial for appropriately calculating the cultural complexity given innovation
+rates. 
+
+As a first step towards these bigger questions, we have demonstrated a
+(what kind of) relationship between computational complexity and cultural 
+complexity, and innovation rates and cultural complexity. Next I will try 
+calculating innovation rates for different NSF divisions from one year to the
+next, following the method for analyzing French revolution speeches in 
+\cite{Barron2018}. We can see if there exists the same modeled relationship
+between innovation rate and cultural complexity, as we could measure through
+the optimal number of topics for each directorate in Latent Dirichlet Allocation
+\citep{Blei2003,Griffiths2004}.
+
+
+
+%\newpage
+\bibliographystyle{newapa}
+\bibliography{/Users/mt/workspace/papers/library.bib}
+
+\end{document}
